@@ -16,6 +16,16 @@
         {{ item.name }}
       </router-link>
     </nav>
+    <!-- Logout Button -->
+    <div class="p-4 border-t border-gray-700">
+      <button
+        @click="handleLogout"
+        class="flex items-center w-full px-4 py-2 rounded hover:bg-red-600 transition-colors text-red-400 hover:text-white"
+      >
+        <span class="mr-3">🚪</span>
+        Logout
+      </button>
+    </div>
   </div>
 
   <!-- Mobile Sidebar -->
@@ -45,11 +55,23 @@
           {{ item.name }}
         </router-link>
       </nav>
+      <!-- Mobile Logout Button -->
+      <div class="p-4 border-t border-gray-700">
+        <button
+          @click="handleLogout"
+          class="flex items-center w-full px-4 py-2 rounded hover:bg-red-600 transition-colors text-red-400 hover:text-white"
+        >
+          <span class="mr-3">🚪</span>
+          Logout
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { authService } from '@/services/authService';
+
 export default {
   name: 'Sidebar',
   props: {
@@ -69,6 +91,14 @@ export default {
         { name: 'Analytics', path: '/analytics', icon: '📈' },
         { name: 'Settings', path: '/settings', icon: '⚙️' }
       ]
+    }
+  },
+  methods: {
+    handleLogout() {
+      if (confirm('Are you sure you want to logout?')) {
+        authService.logout();
+        this.$emit('close'); // Close mobile sidebar if open
+      }
     }
   }
 }

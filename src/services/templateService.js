@@ -1,32 +1,32 @@
 import api from './api';
 
 export const templateService = {
-  async getAllTemplates() {
+  async getAll() {
     const response = await api.get('/templates');
     return response.data;
   },
 
-  async getTemplate(id) {
+  async getById(id) {
     const response = await api.get(`/templates/${id}`);
     return response.data;
   },
 
-  async createTemplate(templateData) {
+  async create(templateData) {
     const response = await api.post('/templates', templateData);
     return response.data;
   },
 
-  async updateTemplate(id, templateData) {
+  async update(id, templateData) {
     const response = await api.put(`/templates/${id}`, templateData);
     return response.data;
   },
 
-  async deleteTemplate(id) {
+  async delete(id) {
     const response = await api.delete(`/templates/${id}`);
     return response.data;
   },
 
-  async previewTemplate(id, data = {}) {
+  async preview(id, data = {}) {
     const response = await api.post(`/templates/${id}/preview`, data);
     return response.data;
   }

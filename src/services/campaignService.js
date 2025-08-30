@@ -1,37 +1,73 @@
 import api from './api';
 
 export const campaignService = {
-  async getAllCampaigns() {
+  async getAll() {
     const response = await api.get('/campaigns');
     return response.data;
   },
 
-  async getCampaign(id) {
+  async getById(id) {
     const response = await api.get(`/campaigns/${id}`);
     return response.data;
   },
 
-  async createCampaign(campaignData) {
+  async create(campaignData) {
     const response = await api.post('/campaigns', campaignData);
     return response.data;
   },
 
-  async updateCampaign(id, campaignData) {
+  async update(id, campaignData) {
     const response = await api.put(`/campaigns/${id}`, campaignData);
     return response.data;
   },
 
-  async deleteCampaign(id) {
+  async delete(id) {
     const response = await api.delete(`/campaigns/${id}`);
     return response.data;
   },
 
-  async sendCampaign(id) {
-    const response = await api.post(`/email/send-campaign/${id}`);
+  async send(id) {
+    console.log('🚀 Sending campaign:', id);
+    console.log('📡 API endpoint:', `/email/send-campaign/${id}`);
+    
+    try {
+      const response = await api.post(`/email/send-campaign/${id}`);
+      console.log('✅ Campaign send response:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Campaign send error:', error.response?.data || error.message);
+      throw error;
+    }
+  },
+
+  async schedule(id, scheduledAt) {
+    const response = await api.put(`/campaigns/${id}`, {
+      status: 'scheduled',
+      scheduledAt
+    });
     return response.data;
   },
 
-  async getCampaignStats(id) {
+  async pause(id) {
+    const response = await api.put(`/campaigns/${id}`, {
+      status: 'paused'
+    });
+    return response.data;
+  },
+
+  async resume(id) {
+    const response = await api.put(`/campaigns/${id}`, {
+      status: 'active'
+    });
+    return response.data;
+  },
+
+  async duplicate(id) {
+    const response = await api.post(`/campaigns/${id}/duplicate`);
+    return response.data;
+  },
+
+  async getStats(id) {
     const response = await api.get(`/campaigns/${id}/stats`);
     return response.data;
   }

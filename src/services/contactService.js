@@ -1,27 +1,27 @@
 import api from './api';
 
 export const contactService = {
-  async getAllContacts() {
+  async getAll() {
     const response = await api.get('/contacts');
     return response.data;
   },
 
-  async getContact(id) {
+  async getById(id) {
     const response = await api.get(`/contacts/${id}`);
     return response.data;
   },
 
-  async createContact(contactData) {
+  async create(contactData) {
     const response = await api.post('/contacts', contactData);
     return response.data;
   },
 
-  async updateContact(id, contactData) {
+  async update(id, contactData) {
     const response = await api.put(`/contacts/${id}`, contactData);
     return response.data;
   },
 
-  async deleteContact(id) {
+  async delete(id) {
     const response = await api.delete(`/contacts/${id}`);
     return response.data;
   },
@@ -37,6 +37,26 @@ export const contactService = {
 
   async getContactsBySegment(segment) {
     const response = await api.get(`/contacts?segment=${segment}`);
+    return response.data;
+  },
+
+  async bulkUpdate(contactIds, updateData) {
+    const response = await api.put('/contacts/bulk-update', {
+      contactIds,
+      updateData
+    });
+    return response.data;
+  },
+
+  async bulkDelete(contactIds) {
+    const response = await api.delete('/contacts/bulk-delete', {
+      data: { contactIds }
+    });
+    return response.data;
+  },
+
+  async getSegments() {
+    const response = await api.get('/contacts/segments');
     return response.data;
   }
 };
