@@ -134,7 +134,7 @@
 <script>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { authService } from '../services/authService';
+// import { authService } from '../services/authService'; // Commented out API service
 
 
 export default {
@@ -156,13 +156,56 @@ export default {
       error.value = '';
       success.value = '';
 
-      // Client-side validation for password match
+      // Client-side validation
+      if (!form.value.username.trim()) {
+        error.value = 'Username is required.';
+        return;
+      }
+      if (!form.value.email.trim()) {
+        error.value = 'Email is required.';
+        return;
+      }
+      if (!form.value.password.trim()) {
+        error.value = 'Password is required.';
+        return;
+      }
       if (form.value.password !== form.value.confirmPassword) {
         error.value = 'Passwords do not match.';
         return;
       }
 
       loading.value = true;
+      
+      // Simulate registration process
+      setTimeout(() => {
+        // Store registered users in localStorage for demo purposes
+        const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+        
+        // Check if username already exists
+        if (registeredUsers.find(user => user.username === form.value.username)) {
+          error.value = 'Username already exists. Please choose a different one.';
+          loading.value = false;
+          return;
+        }
+        
+        // Add new user
+        registeredUsers.push({
+          username: form.value.username,
+          email: form.value.email,
+          password: form.value.password // In real app, this would be hashed
+        });
+        
+        localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+        
+        success.value = 'Account created successfully! Redirecting to login...';
+        loading.value = false;
+        
+        setTimeout(() => {
+          router.push('/login');
+        }, 2000);
+      }, 1000);
+
+      /* Commented out API registration
       try {
         await authService.register({
           username: form.value.username,
@@ -178,6 +221,7 @@ export default {
       } finally {
         loading.value = false;
       }
+      */
     };
 
     return {

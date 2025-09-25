@@ -157,7 +157,7 @@
 <script>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { authService } from '../services/authService';
+// import { authService } from '../services/authService'; // Commented out API service
 
 
 export default {
@@ -175,6 +175,26 @@ export default {
       loading.value = true;
       error.value = '';
 
+      // Simple validation - accept any non-empty username and password
+      if (!form.value.username.trim() || !form.value.password.trim()) {
+        error.value = 'Please enter both username and password.';
+        loading.value = false;
+        return;
+      }
+
+      // Simulate loading delay
+      setTimeout(() => {
+        // Store user info in localStorage for demo purposes
+        localStorage.setItem('user', JSON.stringify({
+          username: form.value.username,
+          loggedIn: true
+        }));
+        
+        loading.value = false;
+        router.push('/');
+      }, 1000);
+
+      /* Commented out API login
       try {
         await authService.login(form.value);
         router.push('/');
@@ -184,6 +204,7 @@ export default {
       } finally {
         loading.value = false;
       }
+      */
     };
 
     return {
