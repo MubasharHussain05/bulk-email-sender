@@ -159,7 +159,6 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
 
-
 export default {
   name: 'Login',
   setup() {
