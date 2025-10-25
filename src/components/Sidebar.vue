@@ -15,6 +15,18 @@
         <span class="mr-3">{{ item.icon }}</span>
         {{ item.name }}
       </router-link>
+      <div class="mt-auto pt-4 border-t border-gray-700">
+        <div v-if="authStore.isAuthenticated" class="px-4 py-2 text-sm text-gray-300">
+          Welcome, {{ authStore.user?.username }}
+        </div>
+        <button
+          @click="handleLogout"
+          class="flex items-center w-full px-4 py-2 mt-2 transition-colors rounded hover:bg-gray-700 text-left"
+        >
+          <span class="mr-3">🚪</span>
+          Logout
+        </button>
+      </div>
     </nav>
   </div>
 
@@ -44,12 +56,27 @@
           <span class="mr-3">{{ item.icon }}</span>
           {{ item.name }}
         </router-link>
+        <div class="mt-auto pt-4 border-t border-gray-700">
+          <div v-if="authStore.isAuthenticated" class="px-4 py-2 text-sm text-gray-300">
+            Welcome, {{ authStore.user?.username }}
+          </div>
+          <button
+            @click="handleLogout"
+            class="flex items-center w-full px-4 py-2 mt-2 transition-colors rounded hover:bg-gray-700 text-left"
+          >
+            <span class="mr-3">🚪</span>
+            Logout
+          </button>
+        </div>
       </nav>
     </div>
   </div>
 </template>
 
 <script>
+import { useAuthStore } from '../stores/auth'
+import { useRouter } from 'vue-router'
+
 export default {
   name: 'Sidebar',
   props: {
@@ -59,6 +86,20 @@ export default {
     }
   },
   emits: ['close'],
+  setup() {
+    const authStore = useAuthStore()
+    const router = useRouter()
+
+    const handleLogout = async () => {
+      await authStore.logout()
+      router.push('/login')
+    }
+
+    return {
+      authStore,
+      handleLogout
+    }
+  },
   data() {
     return {
       menuItems: [

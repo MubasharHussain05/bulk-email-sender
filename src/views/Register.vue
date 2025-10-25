@@ -1,5 +1,3 @@
-<!-- REGISTER FUNCTIONALITY TEMPORARILY DISABLED -->
-<!--
 <template>
   <div class="flex flex-col justify-center min-h-screen py-12 bg-gradient-to-br from-slate-900 to-slate-700 sm:px-6 lg:px-8">
     <transition
@@ -56,8 +54,8 @@
               <div class="relative mt-1">
                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                   <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v12a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm1 1v10h12V5H4z" clip-rule="evenodd" />
-                    <path d="M4 5l6 4 6-4H4z" />
+                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                   </svg>
                 </div>
                 <input id="email" v-model="form.email" name="email" type="email" required class="block w-full py-2 pl-10 pr-3 placeholder-gray-400 border border-gray-300 rounded-md shadow-sm appearance-none focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="your@email.com" />
@@ -94,9 +92,9 @@
                 <p class="text-sm text-green-700">{{ success }}</p>
             </div>
             <div>
-              <button type="submit" :disabled="loading" class="flex justify-center w-full px-4 py-2 text-sm font-medium text-white transition-all duration-300 bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-400 disabled:cursor-not-allowed">
-                <svg v-if="loading" class="w-5 h-5 mr-3 -ml-1 text-white animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                <span>{{ loading ? 'Creating account...' : 'Sign up' }}</span>
+              <button type="submit" :disabled="authStore.loading" class="flex justify-center w-full px-4 py-2 text-sm font-medium text-white transition-all duration-300 bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-400 disabled:cursor-not-allowed">
+                <svg v-if="authStore.loading" class="w-5 h-5 mr-3 -ml-1 text-white animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                <span>{{ authStore.loading ? 'Creating account...' : 'Sign up' }}</span>
               </button>
             </div>
           </form>
@@ -113,116 +111,54 @@
     </transition>
   </div>
 </template>
--->
-
-<template>
-  <div class="flex items-center justify-center min-h-screen bg-gray-100">
-    <div class="text-center">
-      <h1 class="text-2xl font-bold text-gray-800 mb-4">Registration Temporarily Disabled</h1>
-      <p class="text-gray-600 mb-6">Registration functionality is currently disabled for development.</p>
-      <router-link to="/" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
-        Go to Dashboard
-      </router-link>
-    </div>
-  </div>
-</template>
 
 <script>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-// import { authService } from '../services/authService'; // Commented out API service
-
+import { useAuthStore } from '../stores/auth';
 
 export default {
   name: 'Register',
   setup() {
     const router = useRouter();
+    const authStore = useAuthStore();
     const form = ref({
       username: '',
       email: '',
       password: '',
       confirmPassword: ''
     });
-    const loading = ref(false);
     const error = ref('');
     const success = ref('');
 
     const handleRegister = async () => {
-      // Clear previous messages
       error.value = '';
       success.value = '';
 
-      // Client-side validation
-      if (!form.value.username.trim()) {
-        error.value = 'Username is required.';
-        return;
-      }
-      if (!form.value.email.trim()) {
-        error.value = 'Email is required.';
-        return;
-      }
-      if (!form.value.password.trim()) {
-        error.value = 'Password is required.';
-        return;
-      }
       if (form.value.password !== form.value.confirmPassword) {
         error.value = 'Passwords do not match.';
         return;
       }
 
-      loading.value = true;
-      
-      // Simulate registration process
-      setTimeout(() => {
-        // Store registered users in localStorage for demo purposes
-        const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-        
-        // Check if username already exists
-        if (registeredUsers.find(user => user.username === form.value.username)) {
-          error.value = 'Username already exists. Please choose a different one.';
-          loading.value = false;
-          return;
-        }
-        
-        // Add new user
-        registeredUsers.push({
-          username: form.value.username,
-          email: form.value.email,
-          password: form.value.password // In real app, this would be hashed
-        });
-        
-        localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
-        
+      const result = await authStore.register({
+        username: form.value.username,
+        email: form.value.email,
+        password: form.value.password,
+      });
+
+      if (result.success) {
         success.value = 'Account created successfully! Redirecting to login...';
-        loading.value = false;
-        
         setTimeout(() => {
           router.push('/login');
         }, 2000);
-      }, 1000);
-
-      /* Commented out API registration
-      try {
-        await authService.register({
-          username: form.value.username,
-          email: form.value.email,
-          password: form.value.password,
-        });
-        success.value = 'Account created successfully! Redirecting to login...';
-        setTimeout(() => {
-          router.push('/login');
-        }, 2000); // Wait 2 seconds before redirecting
-      } catch (err) {
-        error.value = err.response?.data?.error || 'Registration failed. Please try again.';
-      } finally {
-        loading.value = false;
+      } else {
+        error.value = result.error;
       }
-      */
     };
 
     return {
       form,
-      loading,
+      authStore,
       error,
       success,
       handleRegister

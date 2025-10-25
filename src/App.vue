@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-screen bg-gray-50">
+  <div v-if="authStore.isAuthenticated" class="flex h-screen bg-gray-50">
     <Sidebar :is-mobile-open="isMobileMenuOpen" @close="isMobileMenuOpen = false" />
     <div class="flex-1 flex flex-col overflow-hidden">
       <!-- Mobile menu button -->
@@ -16,15 +16,26 @@
       </main>
     </div>
   </div>
+  <!-- Auth pages (login/register) -->
+  <div v-else>
+    <router-view />
+  </div>
 </template>
 
 <script>
 import Sidebar from './components/Sidebar.vue'
+import { useAuthStore } from './stores/auth'
 
 export default {
   name: 'App',
   components: {
     Sidebar
+  },
+  setup() {
+    const authStore = useAuthStore()
+    return {
+      authStore
+    }
   },
   data() {
     return {
